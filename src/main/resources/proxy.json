@@ -1,0 +1,19 @@
+{
+  "max-players": 20,
+  "servers": [
+    {
+      "name": "Lobby",
+      "default": true,
+      "public": true,
+      "address": "localhost:1000"
+    },
+    {
+      "name": "Survival",
+      "default": false,
+      "public": false,
+      "address": "localhost:1001"
+    }
+  ],
+
+  "save-player-location": false
+}

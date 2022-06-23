@@ -1,13 +1,11 @@
 package me.cutenyami.lava.command.impl;
 
-import me.cutenyami.lava.Lava;
+import me.cutenyami.lava.ProxyServer;
 import me.cutenyami.lava.command.Command;
 import me.cutenyami.lava.console.sender.IConsoleSender;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 public class HelpCMD extends Command {
     public HelpCMD() {
@@ -44,7 +42,7 @@ public class HelpCMD extends Command {
         pageHeight = Integer.MAX_VALUE;
 
         Map<String, Command> commands = new HashMap<>();
-        for (Command command : Lava.getInstance().getCommandManager().getCommandList()) {
+        for (Command command : ProxyServer.getInstance().getCommandManager().getCommandList()) {
             /*
             if (sender.hasPermission(command.getPermission())) {
                 commands.put(command.getName(), command);

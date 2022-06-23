@@ -1,49 +1,46 @@
 package me.cutenyami.lava;
 
-import me.cutenyami.lava.command.CommandManager;
-import me.cutenyami.lava.console.color.ConsoleColors;
-import me.cutenyami.lava.dependency.DependencyLoader;
+import me.cutenyami.lava.command.impl.HelpCMD;
+import me.cutenyami.lava.command.impl.StopCMD;
+import me.cutenyami.lava.console.Console;
+import me.cutenyami.lava.console.listener.IConsoleListener;
 
-import java.io.File;
+import java.io.IOException;
 
 public class Lava {
 
-    public static String version = "Lava_0.0.1_SNAPSHOT";
+    public static final String NAME = "Lava-Proxy";
 
-    private static Lava instance;
+    public static final long START_TIME = System.currentTimeMillis();
 
-    private final DependencyLoader loader = new DependencyLoader();
+    public static void main(String[] args) {
+        try {
+            ProxyServer.init();
+            Console console = new Console();
 
-    private final CommandManager commandManager = new CommandManager();
+            console.addListener(new IConsoleListener() {
+                @Override
+                public void handleInit(Console console) {
+                    console.sendMessage("§4This is a dev build!", "§4This build is under development and may have bugs!");
 
-    public Lava() {
-        File folder = new File("dependencies");
+                    ProxyServer.getInstance().getCommandManager().register(new HelpCMD(), new StopCMD(console));
 
-        if (!folder.exists()) {
-            folder.mkdir();
+                    System.out.println(NAME + " started in " + ((double) (System.currentTimeMillis() - Lava.START_TIME) / 1000) + " seconds!");
+                }
+
+                @Override
+                public void handleInput(Console console, String line) {
+
+                }
+
+                @Override
+                public void handleClose(Console console) {
+
+                }
+            }).start();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-        System.out.println("Loading dependencies, please wait...");
-
-        this.loader.getDependencies().forEach(dependency -> {
-            this.loader.download(dependency);
-            this.loader.init(dependency);
-        });
     }
 
-    public static void init() {
-        instance = new Lava();
-    }
-
-    public static void println(String message) {
-        System.out.println(ConsoleColors.translateColorCodes('§', message));
-    }
-
-    public static Lava getInstance() {
-        return instance;
-    }
-
-    public CommandManager getCommandManager() {
-        return this.commandManager;
-    }
 }

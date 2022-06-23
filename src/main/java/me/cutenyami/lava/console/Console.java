@@ -1,6 +1,6 @@
 package me.cutenyami.lava.console;
 
-import me.cutenyami.lava.Lava;
+import me.cutenyami.lava.ProxyServer;
 import me.cutenyami.lava.console.color.ConsoleColors;
 import me.cutenyami.lava.console.listener.IConsoleListener;
 import me.cutenyami.lava.console.sender.IConsoleSender;
@@ -42,8 +42,8 @@ public class Console implements Runnable, Closeable, IConsoleSender {
     public void run() {
         this.running = true;
         this.listeners.forEach(listener -> listener.handleInit(this));
-        while (this.running && (this.line = this.reader.readLine(ConsoleColors.translateColorCodes('§', Lava.version + " §r=> "))) != null) {
-            Lava.getInstance().getCommandManager().dispatchCommand(this, this);
+        while (this.running && (this.line = this.reader.readLine(ConsoleColors.translateColorCodes('§', ProxyServer.version + " §r=> "))) != null) {
+            ProxyServer.getInstance().getCommandManager().dispatchCommand(this, this);
             this.listeners.forEach(listener -> listener.handleInput(this, this.line));
         }
         this.listeners.forEach(listener -> listener.handleClose(this));
@@ -51,6 +51,7 @@ public class Console implements Runnable, Closeable, IConsoleSender {
 
     public void close() {
         this.running = false;
+        sendMessage("§cThank you and goodbye");
     }
 
     public void sendMessage(Object... messages) {
